@@ -1,0 +1,4 @@
+{
+	"SEARCH_HOST": "https://scylla.sh/search",
+	"LIMITER" : "2"
+}
