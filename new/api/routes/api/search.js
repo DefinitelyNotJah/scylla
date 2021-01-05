@@ -96,9 +96,9 @@ module.exports = app => {
 				params : _params
 			})
 			//console.log(response.data)
-			//let json_hits_raw = response.data["hits"]["hit"]
-		 	//return res.send(json_hits_raw) // Sends the response to the user
-		 	return res.send(response.data)
+			let json_hits_raw = response.data["hits"]["hit"]
+		 	return res.send(json_hits_raw) // Sends the response to the user
+		 	//return res.send(response.data)
 		} catch (err)
 		{
 			//console.log(err)
