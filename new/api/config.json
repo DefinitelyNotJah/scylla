@@ -1,4 +1,5 @@
 {
 	"SEARCH_HOST": "https://scylla.sh/search",
-	"LIMITER" : "2"
-}
+	"LIMITER" : "2",
+	"monitor" : "on"
+} 

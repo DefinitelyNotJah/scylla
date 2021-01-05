@@ -1,18 +1,21 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = (theme) => ({
   root: {
     flexGrow: 1,
+    marginTop : theme.spacing(3),
+    backgroundColor: theme.palette.background.paper,
   },
-  paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary,
+  divstuff : {
+  	textAlign : 'center',
+  	padding: theme.spacing(2, 1, 1)
   },
 });
 
@@ -21,25 +24,35 @@ class footerLower extends React.Component {
 		const { classes }  = this.props;
 	  return (
 	    <div className={classes.root}>
-	      <Grid container spacing={3}>
+      	<Divider variant="middle" />
+      	<Grid container spacing={3}>
 	        <Grid item xs={12}>
-	          <Paper className={classes.paper} >
-	            <Typography variant="caption" display="block" gutterBottom>
-	              ToS
-	                The information on this website is intended only for research purposes. Access has been given to security or other researchers for the purposes of research ONLY. Other than that I sincerely hope this data helps you with your projects and aids in your understanding of your or your organization's security posture. Much love.
+	          	<div className={classes.divstuff}>
 
-	                - _hyp3ri0n
-	            </Typography>
-	            <Typography variant="caption" display="block" gutterBottom>
-	              ToS Enforcement
-	The information on this website is intended only for research purposes. We search common database leak sites to ensure this is not being circulated for malicious use. We do have default logging turned on for this website which likely includes IP addresses and other identifiers. Please don't misuse this information as we will cooperate with law enforcement if it is.
-	By the way, for old users, by popular request there is no longer a cryptominer on this website or any ads.
-
-	- _hyp3ri0n
-	            </Typography>
-	          </Paper>
+	            	<Typography variant="caption" display="block" color="textSecondary">
+		            	<Link
+				            href="/sitemap.xml" 
+				            color="inherit"
+				            style= {{ textDecoration: "none" }}
+				        >
+						    SITEMAP
+						</Link>
+	            	</Typography>
+	            	<Typography variant="caption" display="block" color="textSecondary">
+	            		<Link
+				            href="/faq" 
+				            color="inherit"
+				            style= {{ textDecoration: "none" }}
+				        >
+						    FAQ
+						</Link>
+	            	</Typography>
+	            	<Typography variant="caption" display="block" color="textSecondary">
+					    © 2021
+	            	</Typography>
+	          	</div>
 	        </Grid>
-	      </Grid>
+	    </Grid>
 	    </div>
   		);
 	}

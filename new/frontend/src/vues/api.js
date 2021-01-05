@@ -9,12 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 
-import { DataGrid } from '@material-ui/data-grid';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import Link from '@material-ui/core/Link';
+import Button from '@material-ui/core/Button';
 
 // Tabs
 import Tabs from '@material-ui/core/Tabs';
@@ -56,23 +55,17 @@ function a11yProps(index) {
   };
 }
 
-const columns = [
-  { field: 'ip', headerName: 'IP', sortable: false, width:150},
-  { field: 'domain', headerName: 'Domain', sortable: false, width:150},
-  { field: 'username', headerName: 'Username', sortable: false},
-  { field: 'passhash', headerName: 'Passhash', sortable: false},
-  { field: 'email', headerName: 'Email', sortable: false, width:300},
-  { field: 'name', headerName: 'Name', sortable: false, width:300},
-  { field: 'password', headerName: 'Password', sortable: false, width:300},
-];
-
 const useStyles = (theme) => ({
   root: {
     flexGrow: 1,
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
+    textAlign : 'center',
+    color: theme.palette.text.secondary,
+  },
+  paper2: {
+    padding: theme.spacing(2),
     color: theme.palette.text.secondary,
   },
   papercode: {
@@ -81,7 +74,10 @@ const useStyles = (theme) => ({
   },
   divcode: {
   	textAlign: 'center',
-  }
+  },
+  IPaddresswarning : {
+  	marginTop : theme.spacing(1)
+  },
 });
 
 class API extends React.Component {
@@ -89,48 +85,13 @@ class API extends React.Component {
 	{
 		super(props)
 		this.state = {
-			searchterm : '',
-			response : [],
 			valeur : 0
 		}
-		this.onChange = this.onChange.bind(this);
-    	this.handleSubmit = this.handleSubmit.bind(this);
     	this.onValeur = this.onValeur.bind(this);
 	}
 	onValeur = (e, nv) => {
 		this.setState({
 			valeur: nv
-		})
-	}
-	onChange = (e) => {
-		this.setState({
-			searchterm : e.target.value
-		})
-		console.log(this.state.searchterm)
-	}
-	handleSubmit = async (e) => {
-		e.preventDefault()
-		const reply = await axios.get("http://localhost:5000/search", {
-			params : {
-				"q" : this.state.searchterm
-			}
-		})
-		let holyland = []
-		reply.data.forEach( (e, i) => {
-			holyland.push({
-				id : i,
-				ip : e.fields.ip ? e.fields.ip : 'null',
-				domain : e.fields.domain ? e.fields.domain: 'null',
-				username : e.fields.username ? e.fields.username: 'null',
-				passhash : e.fields.passhash ? e.fields.passhash: 'null',
-				email : e.fields.email ? e.fields.email : 'null',
-				name : e.fields.name ? e.fields.name : 'null',
-				password : e.fields.password ? e.fields.password : 'null'
-			})
-		})
-		console.log(holyland)
-		this.setState({
-			response : holyland
 		})
 	}
 	render () {
@@ -141,23 +102,8 @@ class API extends React.Component {
 			        <Grid item xs={12}>
 			        	<Paper className={classes.paper}>
 			        		<Typography variant="body1" gutterBottom>
-			        			*Search is in beta, please report bugs to <Link href="https://github.com/acaceres2176/scylla/issues">the scylla github</Link> repo Please note the API is rate limited to 2 searches per second.
+			        			Report bugs to <Link href="https://github.com/acaceres2176/scylla/issues">the github repository</Link>. 
 			        		</Typography>
-			        	</Paper>
-			        </Grid>
-			        <Grid item xs={12}>
-			        	<Paper className={classes.paper}>
-			        		<form noValidate autoComplete="off" onSubmit={this.handleSubmit}>
-			        			<TextField 
-			        				value={this.state.searchterm}
-			        				onChange={this.onChange}
-			        				label="Please enter a search term..." 
-			        				variant="filled"
-			        			/>
-			        		</form>
-			        		<div style={{ height: 400, width: '100%', marginTop : '1rem' }}>
-					    		<DataGrid rows={this.state.response} columns={columns} pageSize={5} />
-						    </div>
 			        	</Paper>
 			        </Grid>
 			        <Grid item xs={12}>
@@ -166,14 +112,15 @@ class API extends React.Component {
 				        			Queries
 				        		</Typography>
 				        		<Typography variant="body1" gutterBottom>
-				        			Queries use Lucene query syntax. Please note that queries have changed, you no longer need to capitalize the first letter of each field, scylla will rectify automatially if you do use the capital letter. You will get a 500 error if your query is incorrect. Use the fields listed above to guide you. Full query syntax (including wildcards) are supported.
+				        			Queries use Lucene query syntax, you will get a 500 error if your query is incorrect. 
+				        			Use the fields listed above to guide you. Full query syntax (including wildcards) are supported.
 				        		</Typography>
 				        		<Typography variant="body1" gutterBottom>
 				        			Example search for passwords that start with ff
 				        		</Typography>
 				        		<SyntaxHighlighter language="javascript">
 			        			{`
-	password:ff*
+	?q=password:ff*
 			        			`}
 			        			</SyntaxHighlighter>
 			        			<Typography variant="body1" gutterBottom>
@@ -181,7 +128,7 @@ class API extends React.Component {
 				        		</Typography>
 				        		<SyntaxHighlighter language="javascript">
 			        			{`
-	name:da?e password:*d*
+	?q=name:da?e password:*d*
 			        			`}
 			        			</SyntaxHighlighter>
 			        	</Paper>
@@ -229,25 +176,15 @@ class API extends React.Component {
       "password": "mrnaizka"
     },
     "id": "01c082d83c1bbaf18e45995cb2e273f4"
-  },
-  {
-    "fields": {
-      "domain": "Collections",
-      "email": "asasins2000@mail.ru",
-      "password": "89262301010c"
-    },
-    "id": "01c09d34763354ce6dd31492bf7c0244"
-  },
-  {
-    "fields": {
-      "domain": "Collections",
-      "email": "d.o.cm.u.rt.o.n.r.a@gmail.com",
-      "password": "xj7ler7x6t"
-    },
-    "id": "01c0a96dce4aae3651d7d5aac9c42796"
   }
 ]`}
 			        		</SyntaxHighlighter>
+			        		<Typography className={classes.IPaddresswarning} variant="body1" color="error" gutterBottom>
+			        			If you make a request to the API, we will log your IP address
+			        			in order to keep track of the connections made and block any 
+			        			malicious ones. 
+			        			Read more in our Terms Of Service.
+			        		</Typography>
 			        	</Paper>
 			        </Grid>
 			        <Grid item xs={12} sm={6}>

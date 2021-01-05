@@ -24,6 +24,7 @@ export default function ButtonAppBar() {
   const goAPI = () => history.push('api');
   const goHOME = () => history.push('');
   const goCREDIT = () => history.push('credit');
+  const goTRANS = () => history.push('transparency');
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -32,6 +33,7 @@ export default function ButtonAppBar() {
           <div className={classes.title} />
           <Button onClick={goHOME} color="inherit">Home</Button>
           <Button onClick={goAPI}color="inherit">API</Button>
+          <Button onClick={goTRANS} color="inherit">Transparency</Button>
           <Button onClick={goCREDIT} color="inherit">Credits</Button>
         </Toolbar>
       </AppBar>

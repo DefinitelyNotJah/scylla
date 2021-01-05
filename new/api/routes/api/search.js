@@ -2,15 +2,24 @@ const yup = require('yup')
 const axios = require('axios')
 
 const configuration = require('../../config.json')
+const requestsMonitor = require('../../models/handler')
 
 axios.defaults.headers.get['Accept'] = 'application/json';
 
-// Validation stuff
+// Validation table
 const schema = yup.object().shape({
 	q : yup.string(),
 	start: yup.number(),
 	size: yup.number()
 })
+
+function getClientIP(req){
+    return req.connection.remoteAddress || 
+	 req.socket.remoteAddress ||
+	 req.connection.socket.remoteAddress ||
+	 req.headers['x-forwarded-for'] ||
+	 `INVALID`;
+}
 
 module.exports = app => {
 	app.get('/search', async (req, res, next) => {
@@ -20,7 +29,22 @@ module.exports = app => {
 			size
 		} = req.query
 		try {
-			// Validates our query variable "q"
+			// Monitor our shit
+			if (configuration.monitor == "on") {
+				/*
+		 		const monitorUser = new requestsMonitor()
+		 		monitorUser.ip = getClientIP(req) // Gets the client's IP address
+		 		monitorUser.userAgent = req.headers['user-agent']; // Gets his User-Agent
+		 		monitorUser._params.push({
+		 			"q" : q,
+		 			"size" : size,
+		 			"start" : start
+		 		}) // Gets the query params he used in the search
+		 		monitorUser.save() // Saves it in mongodb
+		 		*/
+		 		requestsMonitor.AddElement(getClientIP(req), req.headers['user-agent'], req.query)
+		 	}
+			// Validates our query parameters
 			await schema.validate({
 				q,
 				start,
@@ -31,7 +55,7 @@ module.exports = app => {
 				start=0
 			if(!size)
 				size=50
-
+			
 			let _params = {}
 			if(q)
 			{
@@ -42,10 +66,11 @@ module.exports = app => {
 					return next(new Error("You do not appear to be using Solr/Lucene query syntax."))
 
 				let q_lower_list = q.split(':')
+				// Better dynamic way of turning the query param into lowercase
 				q_lower_list.map( (e, i) => {
 					if(i + 1 % 2 != 1)
 						return e.toLowerCase()
-				}) // Better dynamic way of turning the query param into lowercase
+				}) 
 				//console.log(q_lower_list)
 				let q_param = q_lower_list.join(':')
 				//console.log(q_param)
@@ -71,9 +96,9 @@ module.exports = app => {
 				params : _params
 			})
 			//console.log(response.data)
-			let json_hits_raw = response.data["hits"]["hit"]
-		 	return res.send(json_hits_raw)
-		 	//return res.send(response.data)
+			//let json_hits_raw = response.data["hits"]["hit"]
+		 	//return res.send(json_hits_raw) // Sends the response to the user
+		 	return res.send(response.data)
 		} catch (err)
 		{
 			//console.log(err)

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+   <url>
+
+      <loc>https://scylla.sh</loc>
+   </url>
+
+   <url>
+
+      <loc>https://scylla.sh/api</loc>
+
+   </url>
+
+   <url>
+
+      <loc>https://scylla.sh/transparency</loc>
+
+   </url>
+
+   <url>
+
+      <loc>https://scylla.sh/faq</loc>
+
+
+   </url>
+
+   <url>
+
+      <loc>https://scylla.sh/credit</loc>
+
+   </url>
+
+   <url>
+
+      <loc>https://scylla.sh/search</loc>
+
+   </url>
+
+</urlset>

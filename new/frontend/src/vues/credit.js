@@ -48,6 +48,9 @@ class CREDIT extends React.Component {
 							 . Also greetz to your company  <Link href="https://twitter.com/blackmiragesec">@blackmiragesec</Link> ❤️
 				      	</Typography>
 				      	<Typography variant="body1" gutterBottom>
+							 <Link href="https://twitter.com/DefinitelyIsJah">@DefinitelyIsJah</Link> - for new theme
+				      	</Typography>
+				      	<Typography variant="body1" gutterBottom>
 							 If I forgot to add your name, let me know :). Thanks to everyone who uses and supports this project and fights back when people start causing Twitter tizzies about this.
 				      	</Typography>
 			          </Paper>

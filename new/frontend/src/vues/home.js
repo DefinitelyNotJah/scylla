@@ -1,87 +1,223 @@
 import React from 'react';
+import axios from 'axios';
 
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@material-ui/core/Link'
 
 import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+
+import { DataGrid } from '@material-ui/data-grid';
+import Button from '@material-ui/core/Button';
+
+import SearchIcon from '@material-ui/icons/Search';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+
+import Box from '@material-ui/core/Box';
+import backend from '../backend.json';
+
+const columns = [
+  { field: 'ip', headerName: 'IP', sortable: false, width:150},
+  { field: 'domain', headerName: 'Domain', sortable: false, width:150},
+  { field: 'username', headerName: 'Username', sortable: false},
+  { field: 'passhash', headerName: 'Passhash', sortable: false},
+  { field: 'email', headerName: 'Email', sortable: false, width:300},
+  { field: 'name', headerName: 'Name', sortable: false, width:300},
+  { field: 'password', headerName: 'Password', sortable: false, width:300},
+];
+
 const useStyles = (theme) => ({
   root: {
     flexGrow: 1,
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  cardGrid: {
+  	backgroundColor: theme.palette.background.paper,
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+    textAlign : 'center'
   },
   paper: {
     padding: theme.spacing(2),
     color: theme.palette.text.secondary,
   },
+  shitdiv : {
+  	padding : theme.spacing(2, 1, 1)
+  },
+  title: {
+    textAlign: 'right'
+  },
+  root2: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
 });
 
+
 class Search extends React.Component {
+		constructor(props)
+	{
+		super(props)
+		this.state = {
+			searchterm : '*:*',
+			response : []
+		}
+		this.onChange = this.onChange.bind(this);
+    	this.handleSubmit = this.handleSubmit.bind(this);
+	}
+	onChange = (e) => {
+		this.setState({
+			searchterm : e.target.value
+		})
+	}
+	handleSubmit = async (e) => {
+		e.preventDefault()
+		const reply = await axios.get(`${backend.url}/search`, {
+			params : {
+				"q" : this.state.searchterm
+			}
+		})
+		let holyland = []
+		reply.data.forEach( (e, i) => {
+			holyland.push({
+				id : i,
+				ip : e.fields.ip ? e.fields.ip : 'null',
+				domain : e.fields.domain ? e.fields.domain: 'null',
+				username : e.fields.username ? e.fields.username: 'null',
+				passhash : e.fields.passhash ? e.fields.passhash: 'null',
+				email : e.fields.email ? e.fields.email : 'null',
+				name : e.fields.name ? e.fields.name : 'null',
+				password : e.fields.password ? e.fields.password : 'null'
+			})
+		})
+		this.setState({
+			response : holyland
+		})
+	}
 	render () {
+		const cards = [{
+			id : 1,
+			img : 'img/transparency.jpg',
+			title : 'Transparency',
+			path : '/transparency'
+		}, {
+			id : 2,
+			img : 'img/api.jpg',
+			title : 'API',
+			path : '/api'
+		}, {
+			id : 3,
+			img : 'img/credit.jpg',
+			title : 'Credits',
+			path : '/credit'
+		}];
 		const { classes }  = this.props;
 		return (
 			<div className={classes.root} >
-				<Grid container spacing={3}>
-					<Grid item xs={12}>
-			          <Paper className={classes.paper} >
-						<Typography variant="h5" gutterBottom>
-							Hyperion Gray and scylla.sh
-						</Typography>
-						<Typography variant="body1" gutterBottom>
-				        	Scylla is officially a Hyperion Gray project! What does that mean? Well, the little logo thingy at the top left now says Hyperion Gray. That's about it for you users....
-				      	</Typography>
-				      	<Typography variant="body1" gutterBottom>
-				        	Also, you can now support scylla by simply clicking on this link and checking out the Hyperion Gray website.
-				      	</Typography>
-				      	<Typography variant="h6" gutterBottom>
-				        	Noooooo, it's in corporate world now, that means you're going to charge for it doesn't it!?!?
-				      	</Typography>
-				      	<Typography variant="body1" gutterBottom>
-				        	Nope. As I've said from the beginning scylla is and WILL ALWAYS BE free.
-				      	</Typography>
-			          </Paper>
-			        </Grid>
-			        <Grid item xs={12}>
-			           <Paper className={classes.paper}>
-				          <Typography variant="h5" gutterBottom>
-								Why Scylla?
-							</Typography>
-							<Typography variant="body1" gutterBottom>
-					        	scylla.sh has two major goals. One is to have a community-oriented database leak community that is a useful tool for security researchers.
-					      	</Typography>
-					      	<Typography variant="body1" gutterBottom>
-					        	The other major goal is to undercut those people that are selling databases. If we can provide a free product here, we are eating into the bottom-line of those people selling leaked dbs for thousands of dollars. This de-incentivises buying of those DBs and therefore posting them in the first place. Even places that are supposedly "ethical" (looking at you HIBP) still have no problem selling your data. scylla.sh is and *will always* be free with an open API.
-					      	</Typography>
-					      	<Typography variant="body1" gutterBottom>
-					        	If you're an old school scylla.sh user, you might notice a few changes. Specifically there is no cryptominer and there are no advertisements at all for anything. Frankly, I got sick of getting accused of doing this for money when the truth is that this costs me a decent amount. So you may choose to support scylla.sh or not, it will be 100% ad-free from now on and you are welcome here :) (unless you're using this for malicious purposes then I suggest you f*** off as I will cooperate with law enforcement).
-					      	</Typography>
-			            </Paper>
-			        </Grid>
-			        <Grid item xs={12} sm={6}>
-			        	<Paper className={classes.paper}>
-			        		<Typography variant="h5" gutterBottom>
-								Support Scylla
-							</Typography>
-							<Typography variant="body1" gutterBottom>
-								Scylla needs your help! To make this project sustainable it unfortunately needs some help from the commmunity. I am glad to put my personal time and money into this project, but I could use some help on the hosting costs. If you would consider buying me a metaphorical coffee it would greatly help in supporting scylla. Everyone says this, but I mean it when I say that even a 5 dollar donation helps. If everyone donated 5 dollars that visited the site, I could make this project much more sustainable and continue to improve and update it. ALL donations go to improving and maintaining scylla.
-							</Typography>
-			        	</Paper>
-			        </Grid>
-			        <Grid item xs={12} sm={6}>
-			        	<Paper className={classes.paper}>
-			        		<Typography variant="body1" gutterBottom>
-			        			That said, you're welcome to not donate and use the site anyway :). The goal here is to ruin a really shitty economy that sells your data.
-			        		</Typography>
-			        		<Typography variant="body1" gutterBottom>
-			        			Since many have asked (thank you btw) about direct donations, you can send Bitcoin to 3MpFsXKEpxSGzibCTxnceyZ6i3jSQDLzf3 or Monero to and may also donate with paypal with this button
-			        		</Typography>
-			        		<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-			        	</Paper>
-			        </Grid>
-				</Grid>
-			</div>
+		        <div className={classes.heroContent}>
+		          <Container maxWidth="sm">
+		            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+		              SCYLLA
+		            </Typography>
+		            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+		              We provide security researchers access to community-oriented database leaks
+		               including a free and open API.
+		            </Typography>
+		          </Container>
+		        </div>
+		        <div>
+		        	<Container>
+		        		<div className={classes.shitdiv} >	
+				        	<form style={{ textAlign: 'center'}} noValidate autoComplete="off" onSubmit={this.handleSubmit}>
+			        			<Box display="flex" justifyContent="center" m={1} p={1}>
+				        			<Paper component="form" className={classes.root2}>
+								      <InputBase
+								        className={classes.input}
+								        value={this.state.searchterm}
+				        				onChange={this.onChange}
+				        				label="Please enter a search term..." 
+				        				variant="filled"
+								      />
+								      <Divider className={classes.divider} orientation="vertical" />
+								      <IconButton onClick={this.handleSubmit} className={classes.iconButton} aria-label="search">
+								        <SearchIcon />
+								      </IconButton>
+								    </Paper>
+							    </Box>
+				        		<div style={{ height: 400, width: '100%', marginTop : '1rem' }}>
+						    		<DataGrid rows={this.state.response} columns={columns} pageSize={5} />
+							    </div>
+				        	</form>
+			        	</div>
+		        	</Container>
+	        	</div>
+		     <div>
+		        <Container className={classes.cardGrid} maxWidth="md">
+		          {/* End hero unit */}
+		          <Grid container spacing={4}>
+		            {cards.map((card) => (
+		              <Grid item key={card.id} xs={12} sm={6} md={4}>
+		              	<Link underline='none' component={RouterLink} to={card.path}>
+			                <Card className={classes.card}>
+			              		<CardActionArea>
+				                  <CardMedia
+				                    className={classes.cardMedia}
+				                    image={card.img}
+				                    title={card.title}
+				                  />
+
+				                  <CardContent className={classes.cardContent}>
+				                    <Typography gutterBottom variant="h5" component="h2">
+				                      {card.title}
+				                    </Typography>
+				                  </CardContent>
+			                  </CardActionArea>
+			                </Card>
+		                </Link>
+		              </Grid>
+		            ))}
+		          </Grid>
+		        </Container>
+		    </div>
+        </div>
 		)
 	}
 }
