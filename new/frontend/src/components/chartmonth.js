@@ -44,6 +44,7 @@ class ChartMonth extends Component {
 			return response.json();
 		})
 		.then(function(data) {
+			dataPoints = [];
 			for (var i = 0; i < data.length; i++) {
 				dataPoints.push({
 					x: new Date(data[i].x),

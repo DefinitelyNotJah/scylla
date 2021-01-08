@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
 
 // Tabs
 import Tabs from '@material-ui/core/Tabs';

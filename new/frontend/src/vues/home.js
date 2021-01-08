@@ -16,7 +16,6 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
 import { DataGrid } from '@material-ui/data-grid';
-import Button from '@material-ui/core/Button';
 
 import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
@@ -108,29 +107,31 @@ class Search extends React.Component {
 			searchterm : e.target.value
 		})
 	}
-	handleSubmit = async (e) => {
-		e.preventDefault()
-		const reply = await axios.get(`${backend.url}/search`, {
-			params : {
-				"q" : this.state.searchterm
-			}
-		})
-		let holyland = []
-		reply.data.forEach( (e, i) => {
-			holyland.push({
-				id : i,
-				ip : e.fields.ip ? e.fields.ip : 'null',
-				domain : e.fields.domain ? e.fields.domain: 'null',
-				username : e.fields.username ? e.fields.username: 'null',
-				passhash : e.fields.passhash ? e.fields.passhash: 'null',
-				email : e.fields.email ? e.fields.email : 'null',
-				name : e.fields.name ? e.fields.name : 'null',
-				password : e.fields.password ? e.fields.password : 'null'
+	handleSubmit = (event) => {
+		event.preventDefault();
+		( async () => {
+			const reply = await axios.get(`${backend.url}/search`, {
+				params : {
+					"q" : this.state.searchterm
+				}
 			})
-		})
-		this.setState({
-			response : holyland
-		})
+			let holyland = []
+			reply.data.forEach( (e, i) => {
+				holyland.push({
+					id : i,
+					ip : e.fields.ip ? e.fields.ip : 'null',
+					domain : e.fields.domain ? e.fields.domain: 'null',
+					username : e.fields.username ? e.fields.username: 'null',
+					passhash : e.fields.passhash ? e.fields.passhash: 'null',
+					email : e.fields.email ? e.fields.email : 'null',
+					name : e.fields.name ? e.fields.name : 'null',
+					password : e.fields.password ? e.fields.password : 'null'
+				})
+			})
+			this.setState({
+				response : holyland
+			})
+		})();
 	}
 	render () {
 		const cards = [{
@@ -166,7 +167,7 @@ class Search extends React.Component {
 		        <div>
 		        	<Container>
 		        		<div className={classes.shitdiv} >	
-				        	<form style={{ textAlign: 'center'}} noValidate autoComplete="off" onSubmit={this.handleSubmit}>
+				        	<form style={{ textAlign: 'center'}} noValidate autoComplete="off" onSubmit={(event) => this.handleSubmit(event)}>
 			        			<Box display="flex" justifyContent="center" m={1} p={1}>
 				        			<Paper component="form" className={classes.root2}>
 								      <InputBase
@@ -177,7 +178,7 @@ class Search extends React.Component {
 				        				variant="filled"
 								      />
 								      <Divider className={classes.divider} orientation="vertical" />
-								      <IconButton onClick={this.handleSubmit} className={classes.iconButton} aria-label="search">
+								      <IconButton type="SUBMIT" onClick={this.handleSubmit} className={classes.iconButton} aria-label="search">
 								        <SearchIcon />
 								      </IconButton>
 								    </Paper>
